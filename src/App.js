@@ -2,21 +2,28 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChatHistory from './components/ChatHistory';
 import ChatInput from './components/ChatInput';
+import Settings from './components/Settings';
 import './App.css';
 
 const App = () => {
   const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
 
-  // Load chat history from local storage
+  // Load chat history and server address from local storage
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
+    const savedAddress = localStorage.getItem('serverAddress');
     if (savedChats) {
       const parsedChats = JSON.parse(savedChats);
       setChats(parsedChats);
       setCurrentChat(parsedChats.length > 0 ? 0 : null);
       setMessages(parsedChats.length > 0 ? parsedChats[0].messages : []);
+    }
+    if (savedAddress) {
+      setServerAddress(savedAddress);
     }
   }, []);
 
@@ -33,7 +40,7 @@ const App = () => {
       content: msg.text
     }));
 
-    const response = await axios.post('http://127.0.0.1:8080/v1/chat/completions', {
+    const response = await axios.post(`${serverAddress}/v1/chat/completions`, {
       messages: fullChat,
     });
 
@@ -42,36 +49,30 @@ const App = () => {
 
   const handleSend = async (message) => {
     if (currentChat !== null) {
+      let botMessage = '';
       try {
-        const botMessage = await getBotResponse(message);
-
-        setChats((prevChats) => {
-          const updatedChats = [...prevChats];
-          const currentChatMessages = updatedChats[currentChat].messages;
-          if (!currentChatMessages.find(msg => msg.text === message)) {
-            currentChatMessages.push({ sender: 'user', text: message });
-          }
-          if (!currentChatMessages.find(msg => msg.text === botMessage)) {
-            currentChatMessages.push({ sender: 'bot', text: botMessage });
-          }
-          return updatedChats;
-        });
-
-        setMessages((prevMessages) => {
-          const updatedMessages = [...prevMessages];
-          if (!updatedMessages.find(msg => msg.text === message)) {
-            updatedMessages.push({ sender: 'user', text: message });
-          }
-          if (!updatedMessages.find(msg => msg.text === botMessage)) {
-            updatedMessages.push({ sender: 'bot', text: botMessage });
-          }
-          return updatedMessages;
-        });
+        botMessage = await getBotResponse(message);
       } catch (error) {
         console.error('Error communicating with the API:', error);
       }
+  
+      setChats((prevChats) => {
+        const updatedChats = [...prevChats];
+        const currentChatMessages = updatedChats[currentChat].messages;
+        currentChatMessages.push({ sender: 'user', text: message });
+        if (botMessage) {
+          currentChatMessages.push({ sender: 'bot', text: botMessage });
+        }
+        return updatedChats;
+      });
     }
   };
+  
+  useEffect(() => {
+    if (currentChat !== null) {
+      setMessages(chats[currentChat].messages);
+    }
+  }, [chats, currentChat]);
 
   const handleNewChat = () => {
     const newChat = { id: chats.length, messages: [] };
@@ -89,6 +90,7 @@ const App = () => {
     <div className="app">
       <div className="sidebar">
         <button onClick={handleNewChat}>New Chat</button>
+        <button onClick={() => setShowSettings(true)}>Settings</button>
         <ChatHistory chats={chats} onSelectChat={handleSelectChat} />
       </div>
       <div className="main">
@@ -105,6 +107,12 @@ const App = () => {
         </div>
         <ChatInput onSend={handleSend} />
       </div>
+      {showSettings && (
+        <Settings
+          onClose={() => setShowSettings(false)}
+          onSave={(newAddress) => setServerAddress(newAddress)}
+        />
+      )}
     </div>
   );
 };

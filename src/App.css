@@ -75,3 +75,42 @@
   text-align: left;
   background: #e0e0e0;
 }
+
+.settings {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.settings h2 {
+  margin-top: 0;
+}
+
+.settings label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.settings input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.settings button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.settings button:last-child {
+  background: #ccc;
+}
