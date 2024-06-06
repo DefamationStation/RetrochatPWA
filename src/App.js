@@ -9,8 +9,8 @@ const App = () => {
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
 
+  // Load chat history from local storage
   useEffect(() => {
-    // Load chat history from local storage
     const savedChats = localStorage.getItem('chats');
     if (savedChats) {
       const parsedChats = JSON.parse(savedChats);
@@ -20,9 +20,11 @@ const App = () => {
     }
   }, []);
 
+  // Save chat history to local storage whenever it changes
   useEffect(() => {
-    // Save chat history to local storage whenever it changes
-    localStorage.setItem('chats', JSON.stringify(chats));
+    if (chats.length > 0) {
+      localStorage.setItem('chats', JSON.stringify(chats));
+    }
   }, [chats]);
 
   const handleSend = async (message) => {
