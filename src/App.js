@@ -25,13 +25,6 @@ const App = () => {
     }
   }, []);
 
-  // Save chat history to local storage whenever it changes
-  useEffect(() => {
-    if (chats.length > 0) {
-      localStorage.setItem('chats', JSON.stringify(chats));
-    }
-  }, [chats]);
-
   const getBotResponse = async (message) => {
     const fullChat = [
       ...chats[currentChatId].messages,
@@ -45,40 +38,45 @@ const App = () => {
       messages: fullChat,
     });
 
-    return response.data.choices[0].message.content;
+    const botMessage = response.data.choices[0].message.content;
+
+    // Update the UI to show the bot's response, ensuring we do not add it if already added
+    setChats(prevChats => {
+      // Check to ensure no duplicate responses
+      const lastMessage = prevChats[currentChatId].messages.slice(-1)[0];
+      if (lastMessage && lastMessage.text === botMessage && lastMessage.sender === 'bot') {
+        return prevChats;
+      }
+
+      const updatedChats = [...prevChats];
+      updatedChats[currentChatId].messages.push({ sender: 'bot', text: botMessage });
+
+      // Save the updated chat history to local storage
+      localStorage.setItem('chats', JSON.stringify(updatedChats));
+
+      return updatedChats;
+    });
+
+    return botMessage;
   };
 
   const handleSend = async (message) => {
     if (currentChatId !== null) {
-        // Immediately update the UI to show the user's message
-        setChats(prevChats => {
-            const updatedChats = [...prevChats];
-            updatedChats[currentChatId].messages.push({ sender: 'user', text: message });
-            return updatedChats;
-        });
+      // Immediately update the UI to show the user's message
+      setChats(prevChats => {
+        const updatedChats = [...prevChats];
+        updatedChats[currentChatId].messages.push({ sender: 'user', text: message });
+        return updatedChats;
+      });
 
-        try {
-            // Get the response from the bot
-            const botMessage = await getBotResponse(message);
-
-            // Update the UI to show the bot's response, ensuring we do not add it if already added
-            setChats(prevChats => {
-                // Check to ensure no duplicate responses
-                const lastMessage = prevChats[currentChatId].messages.slice(-1)[0];
-                if (lastMessage && lastMessage.text === botMessage && lastMessage.sender === 'bot') {
-                    return prevChats;
-                }
-
-                const updatedChats = [...prevChats];
-                updatedChats[currentChatId].messages.push({ sender: 'bot', text: botMessage });
-                return updatedChats;
-            });
-        } catch (error) {
-            console.error('Error communicating with the API:', error);
-        }
+      try {
+        // Get the response from the bot
+        await getBotResponse(message);
+      } catch (error) {
+        console.error('Error communicating with the API:', error);
+      }
     }
-};
-
+  };
 
   const handleNewChat = () => {
     const newChat = { id: chats.length, messages: [] };
