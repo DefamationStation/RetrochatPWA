@@ -29,13 +29,16 @@ const App = () => {
 
   const handleSend = async (message) => {
     if (currentChat !== null) {
-      const updatedChats = [...chats];
-      updatedChats[currentChat].messages.push({ sender: 'user', text: message });
-      setChats(updatedChats);
-      setMessages([...updatedChats[currentChat].messages]);
+      setChats((prevChats) => {
+        const updatedChats = [...prevChats];
+        updatedChats[currentChat].messages.push({ sender: 'user', text: message });
+        return updatedChats;
+      });
+
+      setMessages((prevMessages) => [...prevMessages, { sender: 'user', text: message }]);
 
       try {
-        const fullChat = updatedChats[currentChat].messages.map(msg => ({
+        const fullChat = [...messages, { sender: 'user', text: message }].map(msg => ({
           role: msg.sender === 'user' ? 'user' : 'assistant',
           content: msg.text
         }));
@@ -45,9 +48,13 @@ const App = () => {
         });
 
         const botMessage = response.data.choices[0].message.content;
-        updatedChats[currentChat].messages.push({ sender: 'bot', text: botMessage });
-        setChats(updatedChats);
-        setMessages([...updatedChats[currentChat].messages]);
+        setChats((prevChats) => {
+          const updatedChats = [...prevChats];
+          updatedChats[currentChat].messages.push({ sender: 'bot', text: botMessage });
+          return updatedChats;
+        });
+
+        setMessages((prevMessages) => [...prevMessages, { sender: 'bot', text: botMessage }]);
       } catch (error) {
         console.error('Error communicating with the API:', error);
       }
@@ -56,8 +63,7 @@ const App = () => {
 
   const handleNewChat = () => {
     const newChat = { id: chats.length, messages: [] };
-    const updatedChats = [...chats, newChat];
-    setChats(updatedChats);
+    setChats((prevChats) => [...prevChats, newChat]);
     setCurrentChat(newChat.id);
     setMessages([]);
   };
