@@ -27,34 +27,46 @@ const App = () => {
     }
   }, [chats]);
 
+  const getBotResponse = async (message) => {
+    const fullChat = [...messages, { sender: 'user', text: message }].map(msg => ({
+      role: msg.sender === 'user' ? 'user' : 'assistant',
+      content: msg.text
+    }));
+
+    const response = await axios.post('http://127.0.0.1:8080/v1/chat/completions', {
+      messages: fullChat,
+    });
+
+    return response.data.choices[0].message.content;
+  };
+
   const handleSend = async (message) => {
     if (currentChat !== null) {
-      setChats((prevChats) => {
-        const updatedChats = [...prevChats];
-        updatedChats[currentChat].messages.push({ sender: 'user', text: message });
-        return updatedChats;
-      });
-
-      setMessages((prevMessages) => [...prevMessages, { sender: 'user', text: message }]);
-
       try {
-        const fullChat = [...messages, { sender: 'user', text: message }].map(msg => ({
-          role: msg.sender === 'user' ? 'user' : 'assistant',
-          content: msg.text
-        }));
+        const botMessage = await getBotResponse(message);
 
-        const response = await axios.post('http://127.0.0.1:8080/v1/chat/completions', {
-          messages: fullChat,
-        });
-
-        const botMessage = response.data.choices[0].message.content;
         setChats((prevChats) => {
           const updatedChats = [...prevChats];
-          updatedChats[currentChat].messages.push({ sender: 'bot', text: botMessage });
+          const currentChatMessages = updatedChats[currentChat].messages;
+          if (!currentChatMessages.find(msg => msg.text === message)) {
+            currentChatMessages.push({ sender: 'user', text: message });
+          }
+          if (!currentChatMessages.find(msg => msg.text === botMessage)) {
+            currentChatMessages.push({ sender: 'bot', text: botMessage });
+          }
           return updatedChats;
         });
 
-        setMessages((prevMessages) => [...prevMessages, { sender: 'bot', text: botMessage }]);
+        setMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages];
+          if (!updatedMessages.find(msg => msg.text === message)) {
+            updatedMessages.push({ sender: 'user', text: message });
+          }
+          if (!updatedMessages.find(msg => msg.text === botMessage)) {
+            updatedMessages.push({ sender: 'bot', text: botMessage });
+          }
+          return updatedMessages;
+        });
       } catch (error) {
         console.error('Error communicating with the API:', error);
       }
