@@ -6,9 +6,8 @@ import Settings from './components/Settings';
 import './App.css';
 
 const App = () => {
-  const [messages, setMessages] = useState([]);
   const [chats, setChats] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChatId, setCurrentChatId] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
 
@@ -19,8 +18,7 @@ const App = () => {
     if (savedChats) {
       const parsedChats = JSON.parse(savedChats);
       setChats(parsedChats);
-      setCurrentChat(parsedChats.length > 0 ? 0 : null);
-      setMessages(parsedChats.length > 0 ? parsedChats[0].messages : []);
+      setCurrentChatId(parsedChats.length > 0 ? 0 : null);
     }
     if (savedAddress) {
       setServerAddress(savedAddress);
@@ -35,7 +33,10 @@ const App = () => {
   }, [chats]);
 
   const getBotResponse = async (message) => {
-    const fullChat = [...messages, { sender: 'user', text: message }].map(msg => ({
+    const fullChat = [
+      ...chats[currentChatId].messages,
+      { sender: 'user', text: message }
+    ].map(msg => ({
       role: msg.sender === 'user' ? 'user' : 'assistant',
       content: msg.text
     }));
@@ -48,42 +49,49 @@ const App = () => {
   };
 
   const handleSend = async (message) => {
-    if (currentChat !== null) {
-      let botMessage = '';
-      try {
-        botMessage = await getBotResponse(message);
-      } catch (error) {
-        console.error('Error communicating with the API:', error);
-      }
-  
-      setChats((prevChats) => {
-        const updatedChats = [...prevChats];
-        const currentChatMessages = updatedChats[currentChat].messages;
-        currentChatMessages.push({ sender: 'user', text: message });
-        if (botMessage) {
-          currentChatMessages.push({ sender: 'bot', text: botMessage });
+    if (currentChatId !== null) {
+        // Immediately update the UI to show the user's message
+        setChats(prevChats => {
+            const updatedChats = [...prevChats];
+            updatedChats[currentChatId].messages.push({ sender: 'user', text: message });
+            return updatedChats;
+        });
+
+        try {
+            // Get the response from the bot
+            const botMessage = await getBotResponse(message);
+
+            // Update the UI to show the bot's response, ensuring we do not add it if already added
+            setChats(prevChats => {
+                // Check to ensure no duplicate responses
+                const lastMessage = prevChats[currentChatId].messages.slice(-1)[0];
+                if (lastMessage && lastMessage.text === botMessage && lastMessage.sender === 'bot') {
+                    return prevChats;
+                }
+
+                const updatedChats = [...prevChats];
+                updatedChats[currentChatId].messages.push({ sender: 'bot', text: botMessage });
+                return updatedChats;
+            });
+        } catch (error) {
+            console.error('Error communicating with the API:', error);
         }
-        return updatedChats;
-      });
     }
-  };
-  
-  useEffect(() => {
-    if (currentChat !== null) {
-      setMessages(chats[currentChat].messages);
-    }
-  }, [chats, currentChat]);
+};
+
 
   const handleNewChat = () => {
     const newChat = { id: chats.length, messages: [] };
-    setChats((prevChats) => [...prevChats, newChat]);
-    setCurrentChat(newChat.id);
-    setMessages([]);
+    setChats((prevChats) => {
+      const updatedChats = [...prevChats, newChat];
+      localStorage.setItem('chats', JSON.stringify(updatedChats));
+      return updatedChats;
+    });
+    setCurrentChatId(newChat.id);
   };
 
   const handleSelectChat = (chatId) => {
-    setCurrentChat(chatId);
-    setMessages(chats[chatId].messages);
+    setCurrentChatId(chatId);
   };
 
   return (
@@ -95,14 +103,12 @@ const App = () => {
       </div>
       <div className="main">
         <div className="chat-window">
-          {currentChat !== null && (
-            <>
-              {messages.map((message, index) => (
-                <div key={index} className={`message ${message.sender}`}>
-                  {message.text}
-                </div>
-              ))}
-            </>
+          {currentChatId !== null && (
+            chats[currentChatId].messages.map((message, index) => (
+              <div key={index} className={`message ${message.sender}`}>
+                {message.text}
+              </div>
+            ))
           )}
         </div>
         <ChatInput onSend={handleSend} />
