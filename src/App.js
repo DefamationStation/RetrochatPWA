@@ -3,6 +3,7 @@ import axios from 'axios';
 import ChatHistory from './components/ChatHistory';
 import ChatInput from './components/ChatInput';
 import Settings from './components/Settings';
+import { FaTrash } from 'react-icons/fa';
 import './App.css';
 
 const App = () => {
@@ -24,6 +25,17 @@ const App = () => {
       setServerAddress(savedAddress);
     }
   }, []);
+
+  const handleDeleteChat = () => {
+    if (currentChatId !== null) {
+      setChats(prevChats => {
+        const updatedChats = prevChats.filter(chat => chat.id !== currentChatId);
+        localStorage.setItem('chats', JSON.stringify(updatedChats));
+        return updatedChats;
+      });
+      setCurrentChatId(null);
+    }
+  };
 
   const getBotResponse = async (message) => {
     const fullChat = [
@@ -97,6 +109,7 @@ const App = () => {
       <div className="sidebar">
         <button onClick={handleNewChat}>New Chat</button>
         <button onClick={() => setShowSettings(true)}>Settings</button>
+        <FaTrash onClick={handleDeleteChat} />
         <ChatHistory chats={chats} onSelectChat={handleSelectChat} />
       </div>
       <div className="main">
