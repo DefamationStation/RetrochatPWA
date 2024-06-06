@@ -33,11 +33,14 @@ const App = () => {
         localStorage.setItem('chats', JSON.stringify(updatedChats));
         return updatedChats;
       });
-      setCurrentChatId(null);
+      // Set the current chat ID to the first chat's ID if any exist, otherwise null
+      setCurrentChatId(prevChats => (prevChats.length > 0 ? prevChats[0].id : null));
     }
   };
 
   const getBotResponse = async (message) => {
+    if (currentChatId === null) return;
+    
     const fullChat = [
       ...chats[currentChatId].messages,
       { sender: 'user', text: message }
@@ -114,7 +117,7 @@ const App = () => {
       </div>
       <div className="main">
         <div className="chat-window">
-          {currentChatId !== null && (
+          {currentChatId !== null && chats[currentChatId] && (
             chats[currentChatId].messages.map((message, index) => (
               <div key={index} className={`message ${message.sender}`}>
                 {message.text}
