@@ -4,6 +4,8 @@ import ChatHistory from './components/ChatHistory';
 import ChatInput from './components/ChatInput';
 import Settings from './components/Settings';
 import { FaTrash } from 'react-icons/fa';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import './App.css';
 
 const App = () => {
@@ -27,7 +29,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    // Scroll to the bottom when chats change
     if (chatWindowRef.current) {
       chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
     }
@@ -130,7 +131,9 @@ const App = () => {
           {currentChatId !== null && chats[currentChatId] && (
             chats[currentChatId].messages.map((message, index) => (
               <div key={index} className={`message ${message.sender}`}>
-                {message.text}
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {message.text}
+                </ReactMarkdown>
               </div>
             ))
           )}
