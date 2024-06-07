@@ -14,7 +14,7 @@ const App = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
   const chatWindowRef = useRef(null);
-  const prevChatsLengthRef = useRef(chats.length);
+  const prevChatsLengthRef = useRef(0);
 
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
@@ -31,7 +31,7 @@ const App = () => {
 
   useLayoutEffect(() => {
     if (chatWindowRef.current && chats[currentChatId]) {
-      const currentChatMessagesLength = chats[currentChatId].messages.length;
+      const currentChatMessagesLength = chats[currentChatId]?.messages.length || 0;
       const prevChatMessagesLength = prevChatsLengthRef.current;
       
       if (currentChatMessagesLength !== prevChatMessagesLength) {
@@ -53,7 +53,7 @@ const App = () => {
   };
 
   const getBotResponse = async (message) => {
-    if (currentChatId === null) return;
+    if (currentChatId === null || !chats[currentChatId]) return;
     
     const fullChat = [
       ...chats[currentChatId].messages,
@@ -74,16 +74,13 @@ const App = () => {
         const updatedChats = [...prevChats];
         const currentChat = updatedChats[currentChatId];
 
-        // Check to ensure no duplicate responses
         const lastMessage = currentChat.messages.slice(-1)[0];
         if (lastMessage && lastMessage.text === botMessage && lastMessage.sender === 'bot') {
           return prevChats;
         }
 
-        // Add the bot's message to the chat
         currentChat.messages.push({ sender: 'bot', text: botMessage });
 
-        // Save the updated chat history to local storage
         localStorage.setItem('chats', JSON.stringify(updatedChats));
 
         return updatedChats;
@@ -95,14 +92,13 @@ const App = () => {
   };
 
   const handleSend = async (message) => {
-    if (currentChatId !== null) {
+    if (currentChatId !== null && chats[currentChatId]) {
       setChats(prevChats => {
         const updatedChats = [...prevChats];
         updatedChats[currentChatId].messages.push({ sender: 'user', text: message });
         return updatedChats;
       });
 
-      // Ensure to get the bot's response after the user message is updated in the state
       try {
         await getBotResponse(message);
       } catch (error) {

@@ -1,9 +1,8 @@
-/* Global Styles */
 body {
   margin: 0;
-  font-family: 'Fira Code', monospace; /* Modern monospaced font */
-  background: #2b2b2b; /* Dark gray background */
-  color: #ffcc66; /* Pastel amber text */
+  font-family: 'Fira Code', monospace;
+  background: #2b2b2b;
+  color: #ffcc66;
 }
 
 .app {
@@ -12,13 +11,12 @@ body {
   color: #ffcc66;
 }
 
-/* Sidebar Styles */
 .sidebar {
   width: 250px;
-  background: #333333; /* Slightly lighter gray for sidebar */
+  background: #333333;
   padding: 10px;
-  border-right: 1px solid #ffcc66; /* Pastel amber border */
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  border-right: 1px solid #ffcc66;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar button {
@@ -43,30 +41,27 @@ body {
   margin-top: 20px;
 }
 
-/* Main Content Styles */
 .main {
   display: flex;
   flex-direction: column;
-  flex: 1; /* Ensure it takes up available space */
+  flex: 1;
   background: #2b2b2b;
-  overflow: hidden; /* Prevent overflow from impacting the layout */
+  overflow: hidden;
 }
 
-/* Chat Window Styles */
 .chat-window {
   flex: 1;
   display: flex;
   flex-direction: column;
   padding: 10px;
-  overflow-y: auto; /* Enable vertical scrolling */
-  background: #2b2b2b; /* Terminal-like dark background */
-  color: #ffcc66; /* Pastel amber text */
-  border: 1px solid #ffcc66; /* Pastel amber border */
-  box-shadow: 0 0 10px rgba(255, 204, 102, 0.5); /* Glow effect */
-  font-size: 1.1em; /* Slightly larger font for readability */
+  overflow-y: auto;
+  background: #2b2b2b;
+  color: #ffcc66;
+  border: 1px solid #ffcc66;
+  box-shadow: 0 0 10px rgba(255, 204, 102, 0.5);
+  font-size: 1.1em;
 }
 
-/* Custom scrollbar styles for WebKit browsers */
 .chat-window::-webkit-scrollbar {
   width: 8px;
 }
@@ -81,88 +76,84 @@ body {
   border: 2px solid #2b2b2b;
 }
 
-/* Chat Input Styles */
 .chat-input {
   display: flex;
   padding: 10px;
-  background: #3a3a3a; /* Slightly lighter for contrast */
-  border-top: 1px solid #ffcc66; /* Pastel amber border */
+  background: #3a3a3a;
+  border-top: 1px solid #ffcc66;
 }
 
 .chat-input input {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ffcc66; /* Pastel amber border */
-  background: #2b2b2b; /* Dark background */
-  color: #ffcc66; /* Pastel amber text */
+  border: 1px solid #ffcc66;
+  background: #2b2b2b;
+  color: #ffcc66;
   outline: none;
-  font-family: 'Fira Code', monospace; /* Modern monospaced font */
-  caret-color: #ffcc66; /* Pastel amber cursor */
+  font-family: 'Fira Code', monospace;
+  caret-color: #ffcc66;
 }
 
 .chat-input input::placeholder {
-  color: #cc9966; /* Slightly darker pastel amber for placeholder */
+  color: #cc9966;
 }
 
 .chat-input button {
   padding: 10px 20px;
-  border: 1px solid #ffcc66; /* Pastel amber border */
-  background: #2b2b2b; /* Dark background */
-  color: #ffcc66; /* Pastel amber text */
+  border: 1px solid #ffcc66;
+  background: #2b2b2b;
+  color: #ffcc66;
   cursor: pointer;
   outline: none;
-  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+  font-family: 'Fira Code', monospace;
   margin-left: 10px;
 }
 
 .chat-input button:hover {
-  background: #444444; /* Slightly lighter for hover effect */
+  background: #444444;
 }
 
-/* Chat History Styles */
 .chat-history {
   margin-top: 10px;
 }
 
 .chat-item {
   padding: 10px;
-  border-bottom: 1px solid #ffcc66; /* Pastel amber border */
+  border-bottom: 1px solid #ffcc66;
   cursor: pointer;
-  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+  font-family: 'Fira Code', monospace;
 }
 
 .chat-item:hover {
-  background: #444444; /* Darker background on hover */
+  background: #444444;
 }
 
-/* Message Styles */
 .message {
   padding: 10px;
-  border-bottom: 1px solid #ffcc66; /* Pastel amber border */
+  border-bottom: 1px solid #ffcc66;
   word-wrap: break-word;
-  text-align: left; /* Align all messages to the left */
+  text-align: left;
 }
 
 .message.user {
-  background: #3a3a3a; /* Slightly darker for user messages */
+  background: #3a3a3a;
 }
 
 .message.bot {
-  background: #444444; /* Slightly lighter for bot messages */
+  background: #444444;
 }
 
-/* Settings Modal Styles */
 .settings {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #3a3a3a; /* Dark background for the modal */
+  background: #3a3a3a;
   color: #ffcc66;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(255, 204, 102, 0.5); /* Glow effect */
-  border: 1px solid #ffcc66; /* Pastel amber border */
-  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+  box-shadow: 0 0 10px rgba(255, 204, 102, 0.5);
+  border: 1px solid #ffcc66;
+  font-family: 'Fira Code', monospace;
 }
 
 .settings h2 {
@@ -178,11 +169,11 @@ body {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
-  border: 1px solid #ffcc66; /* Pastel amber border */
-  background: #2b2b2b; /* Dark background */
-  color: #ffcc66; /* Pastel amber text */
+  border: 1px solid #ffcc66;
+  background: #2b2b2b;
+  color: #ffcc66;
   outline: none;
-  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+  font-family: 'Fira Code', monospace;
 }
 
 .settings-buttons {
@@ -192,25 +183,24 @@ body {
 
 .settings button {
   padding: 10px 20px;
-  border: 1px solid #ffcc66; /* Pastel amber border */
-  background: #2b2b2b; /* Dark background */
-  color: #ffcc66; /* Pastel amber text */
+  border: 1px solid #ffcc66;
+  background: #2b2b2b;
+  color: #ffcc66;
   cursor: pointer;
   outline: none;
-  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+  font-family: 'Fira Code', monospace;
 }
 
 .settings button:hover {
-  background: #444444; /* Slightly lighter for hover effect */
+  background: #444444;
 }
 
-/* Markdown Content Styling */
 .message p {
   margin: 0 0 10px;
 }
 
 .message a {
-  color: #ffdd88; /* Link color */
+  color: #ffdd88;
   text-decoration: underline;
 }
 
