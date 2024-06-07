@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ChatHistory from './components/ChatHistory';
 import ChatInput from './components/ChatInput';
@@ -14,7 +14,6 @@ const App = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
   const chatWindowRef = useRef(null);
-  const prevChatsLengthRef = useRef(0);
 
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
@@ -29,17 +28,19 @@ const App = () => {
     }
   }, []);
 
-  useLayoutEffect(() => {
-    if (chatWindowRef.current && chats[currentChatId]) {
-      const currentChatMessagesLength = chats[currentChatId]?.messages.length || 0;
-      const prevChatMessagesLength = prevChatsLengthRef.current;
-      
-      if (currentChatMessagesLength !== prevChatMessagesLength) {
-        chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
-        prevChatsLengthRef.current = currentChatMessagesLength;
-      }
+  useEffect(() => {
+    if (chatWindowRef.current) {
+      const chatWindow = chatWindowRef.current;
+      const observer = new MutationObserver(() => {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      });
+
+      observer.observe(chatWindow, { childList: true, subtree: true });
+
+      // Clean up observer on component unmount
+      return () => observer.disconnect();
     }
-  }, [chats, currentChatId]);
+  }, [currentChatId]);
 
   const handleDeleteChat = () => {
     if (currentChatId !== null) {
@@ -54,7 +55,7 @@ const App = () => {
 
   const getBotResponse = async (message) => {
     if (currentChatId === null || !chats[currentChatId]) return;
-    
+
     const fullChat = [
       ...chats[currentChatId].messages,
       { sender: 'user', text: message }
