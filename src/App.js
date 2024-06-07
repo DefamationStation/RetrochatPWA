@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import axios from 'axios';
 import ChatHistory from './components/ChatHistory';
 import ChatInput from './components/ChatInput';
@@ -14,6 +14,7 @@ const App = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
   const chatWindowRef = useRef(null);
+  const prevChatsLengthRef = useRef(chats.length);
 
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
@@ -28,11 +29,17 @@ const App = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (chatWindowRef.current) {
-      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+  useLayoutEffect(() => {
+    if (chatWindowRef.current && chats[currentChatId]) {
+      const currentChatMessagesLength = chats[currentChatId].messages.length;
+      const prevChatMessagesLength = prevChatsLengthRef.current;
+      
+      if (currentChatMessagesLength !== prevChatMessagesLength) {
+        chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+        prevChatsLengthRef.current = currentChatMessagesLength;
+      }
     }
-  }, [chats]);
+  }, [chats, currentChatId]);
 
   const handleDeleteChat = () => {
     if (currentChatId !== null) {
