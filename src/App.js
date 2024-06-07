@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ChatHistory from './components/ChatHistory';
 import ChatInput from './components/ChatInput';
@@ -11,6 +11,7 @@ const App = () => {
   const [currentChatId, setCurrentChatId] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
+  const chatWindowRef = useRef(null);
 
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
@@ -24,6 +25,13 @@ const App = () => {
       setServerAddress(savedAddress);
     }
   }, []);
+
+  useEffect(() => {
+    // Scroll to the bottom when chats change
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  }, [chats]);
 
   const handleDeleteChat = () => {
     if (currentChatId !== null) {
@@ -47,27 +55,35 @@ const App = () => {
       content: msg.text
     }));
 
-    const response = await axios.post(`${serverAddress}/v1/chat/completions`, {
-      messages: fullChat,
-    });
+    try {
+      const response = await axios.post(`${serverAddress}/v1/chat/completions`, {
+        messages: fullChat,
+      });
 
-    const botMessage = response.data.choices[0].message.content;
+      const botMessage = response.data.choices[0].message.content;
 
-    setChats(prevChats => {
-      const lastMessage = prevChats[currentChatId].messages.slice(-1)[0];
-      if (lastMessage && lastMessage.text === botMessage && lastMessage.sender === 'bot') {
-        return prevChats;
-      }
+      setChats(prevChats => {
+        const updatedChats = [...prevChats];
+        const currentChat = updatedChats[currentChatId];
 
-      const updatedChats = [...prevChats];
-      updatedChats[currentChatId].messages.push({ sender: 'bot', text: botMessage });
+        // Check to ensure no duplicate responses
+        const lastMessage = currentChat.messages.slice(-1)[0];
+        if (lastMessage && lastMessage.text === botMessage && lastMessage.sender === 'bot') {
+          return prevChats;
+        }
 
-      localStorage.setItem('chats', JSON.stringify(updatedChats));
+        // Add the bot's message to the chat
+        currentChat.messages.push({ sender: 'bot', text: botMessage });
 
-      return updatedChats;
-    });
+        // Save the updated chat history to local storage
+        localStorage.setItem('chats', JSON.stringify(updatedChats));
 
-    return botMessage;
+        return updatedChats;
+      });
+
+    } catch (error) {
+      console.error('Error communicating with the API:', error);
+    }
   };
 
   const handleSend = async (message) => {
@@ -78,6 +94,7 @@ const App = () => {
         return updatedChats;
       });
 
+      // Ensure to get the bot's response after the user message is updated in the state
       try {
         await getBotResponse(message);
       } catch (error) {
@@ -109,7 +126,7 @@ const App = () => {
         <ChatHistory chats={chats} onSelectChat={handleSelectChat} />
       </div>
       <div className="main">
-        <div className="chat-window">
+        <div className="chat-window" ref={chatWindowRef}>
           {currentChatId !== null && chats[currentChatId] && (
             chats[currentChatId].messages.map((message, index) => (
               <div key={index} className={`message ${message.sender}`}>

@@ -1,69 +1,81 @@
-/* Terminal Styles */
+/* Updated Terminal Styles */
 body {
   margin: 0;
-  font-family: 'Courier New', Courier, monospace;
-  background: #000000; /* Dark background */
-  color: #00FF00; /* Green text for terminal feel */
+  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+  background: #2b2b2b; /* Dark gray background */
+  color: #ffcc66; /* Pastel amber text */
 }
 
 .app {
   display: flex;
   height: 100vh;
-  color: #00FF00;
+  color: #ffcc66;
 }
 
 .sidebar {
   width: 250px;
-  background: #333333; /* Dark sidebar */
+  background: #333333; /* Slightly lighter gray for sidebar */
   padding: 10px;
-  border-right: 2px solid #00FF00; /* Green border */
+  border-right: 1px solid #ffcc66; /* Pastel amber border */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
 }
 
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #000000;
+  background: #2b2b2b;
 }
 
 .chat-window {
   flex: 1;
+  display: flex;
+  flex-direction: column; /* Messages are added from bottom */
+  justify-content: flex-end; /* Align messages at the bottom */
   padding: 10px;
-  overflow-y: scroll;
-  background: #000000; /* Terminal background */
-  color: #00FF00; /* Green text */
-  border: 2px solid #00FF00; /* Green border */
-  box-shadow: 0 0 10px #00FF00; /* Glow effect */
-  font-size: 1.2em; /* Larger font for readability */
+  overflow-y: auto;
+  background: #2b2b2b; /* Terminal-like dark background */
+  color: #ffcc66; /* Pastel amber text */
+  border: 1px solid #ffcc66; /* Pastel amber border */
+  box-shadow: 0 0 10px rgba(255, 204, 102, 0.5); /* Glow effect */
+  font-size: 1.1em; /* Slightly larger font for readability */
 }
 
 .chat-input {
   display: flex;
   padding: 10px;
-  background: #111111; /* Slightly lighter for contrast */
-  border-top: 2px solid #00FF00; /* Green border */
+  background: #3a3a3a; /* Slightly lighter for contrast */
+  border-top: 1px solid #ffcc66; /* Pastel amber border */
 }
 
 .chat-input input {
   flex: 1;
   padding: 10px;
-  border: 2px solid #00FF00; /* Green border */
-  background: #000000; /* Dark background */
-  color: #00FF00; /* Green text */
+  border: 1px solid #ffcc66; /* Pastel amber border */
+  background: #2b2b2b; /* Dark background */
+  color: #ffcc66; /* Pastel amber text */
   outline: none;
+  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+  caret-color: #ffcc66; /* Pastel amber cursor */
+}
+
+.chat-input input::placeholder {
+  color: #cc9966; /* Slightly darker pastel amber for placeholder */
 }
 
 .chat-input button {
   padding: 10px 20px;
-  border: 2px solid #00FF00; /* Green border */
-  background: #000000; /* Dark background */
-  color: #00FF00; /* Green text */
+  border: 1px solid #ffcc66; /* Pastel amber border */
+  background: #2b2b2b; /* Dark background */
+  color: #ffcc66; /* Pastel amber text */
   cursor: pointer;
   outline: none;
+  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+  margin-left: 10px;
 }
 
 .chat-input button:hover {
-  background: #111111; /* Slightly lighter for hover effect */
+  background: #444444; /* Slightly lighter for hover effect */
 }
 
 .chat-history {
@@ -72,28 +84,28 @@ body {
 
 .chat-item {
   padding: 10px;
-  border-bottom: 1px solid #00FF00; /* Green border */
+  border-bottom: 1px solid #ffcc66; /* Pastel amber border */
   cursor: pointer;
+  font-family: 'Fira Code', monospace; /* Modern monospaced font */
 }
 
 .chat-item:hover {
-  background: #222222; /* Slightly lighter for hover effect */
+  background: #444444; /* Darker background on hover */
 }
 
 .message {
   padding: 10px;
-  border-bottom: 1px solid #00FF00; /* Green border */
+  border-bottom: 1px solid #ffcc66; /* Pastel amber border */
   word-wrap: break-word;
+  text-align: left; /* Align all messages to the left */
 }
 
 .message.user {
-  text-align: right;
-  background: #001100; /* Dark green background for user messages */
+  background: #3a3a3a; /* Slightly darker for user messages */
 }
 
 .message.bot {
-  text-align: left;
-  background: #001100; /* Dark green background for bot messages */
+  background: #444444; /* Slightly lighter for bot messages */
 }
 
 .settings {
@@ -101,10 +113,12 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #111111;
-  color: #00FF00;
+  background: #3a3a3a; /* Dark background for the modal */
+  color: #ffcc66;
   padding: 20px;
-  box-shadow: 0 0 10px #00FF00; /* Glow effect */
+  box-shadow: 0 0 10px rgba(255, 204, 102, 0.5); /* Glow effect */
+  border: 1px solid #ffcc66; /* Pastel amber border */
+  font-family: 'Fira Code', monospace; /* Modern monospaced font */
 }
 
 .settings h2 {
@@ -120,41 +134,28 @@ body {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
-  border: 2px solid #00FF00; /* Green border */
-  background: #000000; /* Dark background */
-  color: #00FF00; /* Green text */
+  border: 1px solid #ffcc66; /* Pastel amber border */
+  background: #2b2b2b; /* Dark background */
+  color: #ffcc66; /* Pastel amber text */
+  outline: none;
+  font-family: 'Fira Code', monospace; /* Modern monospaced font */
+}
+
+.settings-buttons {
+  display: flex;
+  justify-content: space-between;
 }
 
 .settings button {
-  margin-right: 10px;
   padding: 10px 20px;
-  border: 2px solid #00FF00; /* Green border */
-  background: #000000; /* Dark background */
-  color: #00FF00; /* Green text */
+  border: 1px solid #ffcc66; /* Pastel amber border */
+  background: #2b2b2b; /* Dark background */
+  color: #ffcc66; /* Pastel amber text */
   cursor: pointer;
+  outline: none;
+  font-family: 'Fira Code', monospace; /* Modern monospaced font */
 }
 
-.settings button:last-child {
-  background: #222222; /* Slightly lighter for cancel button */
+.settings button:hover {
+  background: #444444; /* Slightly lighter for hover effect */
 }
-
-/* Blinking cursor effect */
-@keyframes blink {
-  0%, 50% {
-    border-color: #00FF00;
-  }
-  51%, 100% {
-    border-color: transparent;
-  }
-}
-
-.chat-input input:focus::after {
-  content: '';
-  display: inline-block;
-  width: 1px;
-  height: 1.5em;
-  background: #00FF00;
-  animation: blink 1s step-start infinite;
-  position: absolute;
-}
-
