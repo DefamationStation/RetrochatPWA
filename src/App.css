@@ -1,3 +1,5 @@
+/* App.css */
+
 body {
   margin: 0;
   font-family: 'Fira Code', monospace;
@@ -220,7 +222,11 @@ body {
 }
 
 .message ul, .message ol {
-  padding-left: 20px;
+  padding-left: 15px; /* Ensure list items are properly indented */
+}
+
+.message ol {
+  list-style-position: inside; /* Ensure ordered list numbers are inside the boundaries */
 }
 
 .message blockquote {

@@ -13,19 +13,24 @@ const App = () => {
   const [currentChatId, setCurrentChatId] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
+  const [temperature, setTemperature] = useState(1.0);
+  const [repetitionPenalty, setRepetitionPenalty] = useState(1.0);
   const chatWindowRef = useRef(null);
 
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
     const savedAddress = localStorage.getItem('serverAddress');
+    const savedTemperature = localStorage.getItem('temperature');
+    const savedRepetitionPenalty = localStorage.getItem('repetitionPenalty');
+
     if (savedChats) {
       const parsedChats = JSON.parse(savedChats);
       setChats(parsedChats);
       setCurrentChatId(parsedChats.length > 0 ? 0 : null);
     }
-    if (savedAddress) {
-      setServerAddress(savedAddress);
-    }
+    if (savedAddress) setServerAddress(savedAddress);
+    if (savedTemperature) setTemperature(parseFloat(savedTemperature));
+    if (savedRepetitionPenalty) setRepetitionPenalty(parseFloat(savedRepetitionPenalty));
   }, []);
 
   useLayoutEffect(() => {
@@ -59,6 +64,8 @@ const App = () => {
     try {
       const response = await axios.post(`${serverAddress}/v1/chat/completions`, {
         messages: fullChat,
+        temperature, // Include the temperature parameter
+        repetition_penalty: repetitionPenalty // Include the repetition penalty parameter
       });
   
       const botMessage = response.data.choices[0].message.content;
@@ -94,7 +101,6 @@ const App = () => {
     }
   };
   
-
   const handleSend = async (message) => {
     if (currentChatId !== null && chats[currentChatId]) {
       setChats(prevChats => {
@@ -125,6 +131,12 @@ const App = () => {
     setCurrentChatId(chatId);
   };
 
+  const handleSettingsSave = ({ serverAddress, temperature, repetitionPenalty }) => {
+    setServerAddress(serverAddress);
+    setTemperature(temperature);
+    setRepetitionPenalty(repetitionPenalty);
+  };
+
   return (
     <div className="app">
       <div className="sidebar">
@@ -150,7 +162,7 @@ const App = () => {
       {showSettings && (
         <Settings
           onClose={() => setShowSettings(false)}
-          onSave={(newAddress) => setServerAddress(newAddress)}
+          onSave={handleSettingsSave} // Update to handle additional settings
         />
       )}
     </div>
