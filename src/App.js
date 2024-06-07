@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import axios from 'axios';
 import ChatHistory from './components/ChatHistory';
 import ChatInput from './components/ChatInput';
@@ -14,6 +14,8 @@ const App = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
   const chatWindowRef = useRef(null);
+  const prevMessagesRef = useRef([]);
+  const scrollPositionsRef = useRef({}); // To store scroll positions for each chat
 
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
@@ -28,19 +30,20 @@ const App = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (chatWindowRef.current) {
-      const chatWindow = chatWindowRef.current;
-      const observer = new MutationObserver(() => {
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-      });
+  useLayoutEffect(() => {
+    if (chatWindowRef.current && currentChatId !== null) {
+      // Restore the scroll position for the current chat
+      const savedScrollPosition = scrollPositionsRef.current[currentChatId];
+      if (savedScrollPosition !== undefined) {
+        chatWindowRef.current.scrollTop = savedScrollPosition;
+      } else {
+        chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+      }
 
-      observer.observe(chatWindow, { childList: true, subtree: true });
-
-      // Clean up observer on component unmount
-      return () => observer.disconnect();
+      const currentMessages = chats[currentChatId]?.messages || [];
+      prevMessagesRef.current = currentMessages;
     }
-  }, [currentChatId]);
+  }, [currentChatId, chats]);
 
   const handleDeleteChat = () => {
     if (currentChatId !== null) {
@@ -119,6 +122,10 @@ const App = () => {
   };
 
   const handleSelectChat = (chatId) => {
+    // Save the current scroll position before switching
+    if (chatWindowRef.current) {
+      scrollPositionsRef.current[currentChatId] = chatWindowRef.current.scrollTop;
+    }
     setCurrentChatId(chatId);
   };
 

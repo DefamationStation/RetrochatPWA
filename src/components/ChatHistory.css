@@ -4,13 +4,12 @@
   
   .chat-item {
     padding: 10px;
-    border-bottom: 1px solid #00FF00; /* Green border for terminal effect */
+    border-bottom: 1px solid #ffcc66; 
     cursor: pointer;
-    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+    font-family: 'Courier New', Courier, monospace; 
   }
   
   .chat-item:hover {
-    background: #222222; /* Darker background on hover */
-    color: #00FF00; /* Maintain green text on hover */
+    background: #222222; 
   }
   
