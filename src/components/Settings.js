@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './Settings.css'; // Import the CSS file for styling
 
 const Settings = ({ onClose, onSave }) => {
   const [serverAddress, setServerAddress] = useState('');
@@ -25,10 +26,13 @@ const Settings = ({ onClose, onSave }) => {
           type="text"
           value={serverAddress}
           onChange={(e) => setServerAddress(e.target.value)}
+          placeholder="http://127.0.0.1:8080"
         />
       </label>
-      <button onClick={handleSave}>Save</button>
-      <button onClick={onClose}>Close</button>
+      <div className="settings-buttons">
+        <button onClick={handleSave}>Save</button>
+        <button onClick={onClose}>Close</button>
+      </div>
     </div>
   );
 };

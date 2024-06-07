@@ -1,0 +1,52 @@
+.settings {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111111; /* Dark background for the modal */
+    color: #00FF00; /* Green text */
+    padding: 20px;
+    box-shadow: 0 0 10px #00FF00; /* Glow effect */
+    border: 2px solid #00FF00; /* Green border */
+    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+  }
+  
+  .settings h2 {
+    margin-top: 0;
+  }
+  
+  .settings label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .settings input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 2px solid #00FF00; /* Green border */
+    background: #000000; /* Dark background */
+    color: #00FF00; /* Green text */
+    outline: none;
+    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+  }
+  
+  .settings-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .settings button {
+    padding: 10px 20px;
+    border: 2px solid #00FF00; /* Green border */
+    background: #000000; /* Dark background */
+    color: #00FF00; /* Green text */
+    cursor: pointer;
+    outline: none;
+    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+  }
+  
+  .settings button:hover {
+    background: #222222; /* Slightly lighter for hover effect */
+  }
+  

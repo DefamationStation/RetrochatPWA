@@ -1,0 +1,16 @@
+.chat-history {
+    margin-top: 10px;
+  }
+  
+  .chat-item {
+    padding: 10px;
+    border-bottom: 1px solid #00FF00; /* Green border for terminal effect */
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+  }
+  
+  .chat-item:hover {
+    background: #222222; /* Darker background on hover */
+    color: #00FF00; /* Maintain green text on hover */
+  }
+  

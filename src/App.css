@@ -1,50 +1,69 @@
+/* Terminal Styles */
+body {
+  margin: 0;
+  font-family: 'Courier New', Courier, monospace;
+  background: #000000; /* Dark background */
+  color: #00FF00; /* Green text for terminal feel */
+}
+
 .app {
   display: flex;
   height: 100vh;
+  color: #00FF00;
 }
 
 .sidebar {
   width: 250px;
-  background: #f4f4f4;
+  background: #333333; /* Dark sidebar */
   padding: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-right: 2px solid #00FF00; /* Green border */
 }
 
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: #000000;
 }
 
 .chat-window {
   flex: 1;
   padding: 10px;
   overflow-y: scroll;
-  background: #fff;
+  background: #000000; /* Terminal background */
+  color: #00FF00; /* Green text */
+  border: 2px solid #00FF00; /* Green border */
+  box-shadow: 0 0 10px #00FF00; /* Glow effect */
+  font-size: 1.2em; /* Larger font for readability */
 }
 
 .chat-input {
   display: flex;
   padding: 10px;
-  background: #f4f4f4;
-  border-top: 1px solid #ddd;
+  background: #111111; /* Slightly lighter for contrast */
+  border-top: 2px solid #00FF00; /* Green border */
 }
 
 .chat-input input {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-right: 10px;
+  border: 2px solid #00FF00; /* Green border */
+  background: #000000; /* Dark background */
+  color: #00FF00; /* Green text */
+  outline: none;
 }
 
 .chat-input button {
   padding: 10px 20px;
-  border: none;
-  background: #007bff;
-  color: #fff;
-  border-radius: 4px;
+  border: 2px solid #00FF00; /* Green border */
+  background: #000000; /* Dark background */
+  color: #00FF00; /* Green text */
   cursor: pointer;
+  outline: none;
+}
+
+.chat-input button:hover {
+  background: #111111; /* Slightly lighter for hover effect */
 }
 
 .chat-history {
@@ -53,27 +72,28 @@
 
 .chat-item {
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #00FF00; /* Green border */
   cursor: pointer;
 }
 
 .chat-item:hover {
-  background: #e9e9e9;
+  background: #222222; /* Slightly lighter for hover effect */
 }
 
 .message {
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #00FF00; /* Green border */
+  word-wrap: break-word;
 }
 
 .message.user {
   text-align: right;
-  background: #f0f0f0;
+  background: #001100; /* Dark green background for user messages */
 }
 
 .message.bot {
   text-align: left;
-  background: #e0e0e0;
+  background: #001100; /* Dark green background for bot messages */
 }
 
 .settings {
@@ -81,9 +101,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: #111111;
+  color: #00FF00;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px #00FF00; /* Glow effect */
 }
 
 .settings h2 {
@@ -99,18 +120,41 @@
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
+  border: 2px solid #00FF00; /* Green border */
+  background: #000000; /* Dark background */
+  color: #00FF00; /* Green text */
 }
 
 .settings button {
   margin-right: 10px;
   padding: 10px 20px;
-  border: none;
-  background: #007bff;
-  color: #fff;
-  border-radius: 4px;
+  border: 2px solid #00FF00; /* Green border */
+  background: #000000; /* Dark background */
+  color: #00FF00; /* Green text */
   cursor: pointer;
 }
 
 .settings button:last-child {
-  background: #ccc;
+  background: #222222; /* Slightly lighter for cancel button */
 }
+
+/* Blinking cursor effect */
+@keyframes blink {
+  0%, 50% {
+    border-color: #00FF00;
+  }
+  51%, 100% {
+    border-color: transparent;
+  }
+}
+
+.chat-input input:focus::after {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 1.5em;
+  background: #00FF00;
+  animation: blink 1s step-start infinite;
+  position: absolute;
+}
+

@@ -12,7 +12,6 @@ const App = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
 
-  // Load chat history and server address from local storage
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
     const savedAddress = localStorage.getItem('serverAddress');
@@ -33,7 +32,6 @@ const App = () => {
         localStorage.setItem('chats', JSON.stringify(updatedChats));
         return updatedChats;
       });
-      // Set the current chat ID to the first chat's ID if any exist, otherwise null
       setCurrentChatId(prevChats => (prevChats.length > 0 ? prevChats[0].id : null));
     }
   };
@@ -55,9 +53,7 @@ const App = () => {
 
     const botMessage = response.data.choices[0].message.content;
 
-    // Update the UI to show the bot's response, ensuring we do not add it if already added
     setChats(prevChats => {
-      // Check to ensure no duplicate responses
       const lastMessage = prevChats[currentChatId].messages.slice(-1)[0];
       if (lastMessage && lastMessage.text === botMessage && lastMessage.sender === 'bot') {
         return prevChats;
@@ -66,7 +62,6 @@ const App = () => {
       const updatedChats = [...prevChats];
       updatedChats[currentChatId].messages.push({ sender: 'bot', text: botMessage });
 
-      // Save the updated chat history to local storage
       localStorage.setItem('chats', JSON.stringify(updatedChats));
 
       return updatedChats;
@@ -77,7 +72,6 @@ const App = () => {
 
   const handleSend = async (message) => {
     if (currentChatId !== null) {
-      // Immediately update the UI to show the user's message
       setChats(prevChats => {
         const updatedChats = [...prevChats];
         updatedChats[currentChatId].messages.push({ sender: 'user', text: message });
@@ -85,7 +79,6 @@ const App = () => {
       });
 
       try {
-        // Get the response from the bot
         await getBotResponse(message);
       } catch (error) {
         console.error('Error communicating with the API:', error);

@@ -1,0 +1,55 @@
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background: #111111; /* Darker background for contrast */
+    border-top: 2px solid #00FF00; /* Green border */
+  }
+  
+  .chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #00FF00; /* Green border */
+    background: #000000; /* Terminal-like dark background */
+    color: #00FF00; /* Green text */
+    outline: none;
+    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+    caret-color: #00FF00; /* Green cursor */
+  }
+  
+  .chat-input input::placeholder {
+    color: #007700; /* Darker green for placeholder text */
+  }
+  
+  .chat-input button {
+    padding: 10px 20px;
+    border: 2px solid #00FF00; /* Green border */
+    background: #000000; /* Dark background */
+    color: #00FF00; /* Green text */
+    cursor: pointer;
+    outline: none;
+    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+  }
+  
+  .chat-input button:hover {
+    background: #222222; /* Slightly lighter for hover effect */
+  }
+  
+  @keyframes blink {
+    0%, 50% {
+      border-color: #00FF00;
+    }
+    51%, 100% {
+      border-color: transparent;
+    }
+  }
+  
+  .chat-input input:focus::after {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 1.2em;
+    background: #00FF00;
+    animation: blink 1s step-start infinite;
+    position: absolute;
+  }
+  
