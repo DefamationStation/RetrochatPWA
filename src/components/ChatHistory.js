@@ -1,5 +1,5 @@
 import React from 'react';
-import './ChatHistory.css'; // Import the CSS file for styling
+import './ChatHistory.css';
 
 const ChatHistory = ({ chats, onSelectChat, currentChatId }) => {
   return (
@@ -10,7 +10,7 @@ const ChatHistory = ({ chats, onSelectChat, currentChatId }) => {
           className={`chat-item ${chat.id === currentChatId ? 'active' : ''}`} 
           onClick={() => onSelectChat(chat.id)}
         >
-          {'>'} Chat {chat.id + 1} {/* Prefix with '>' to mimic terminal command list */}
+          {chat.id === currentChatId ? '' : ''} Chat {chat.id + 1}
         </div>
       ))}
     </div>

@@ -10,9 +10,17 @@
   border-bottom: 1px solid #ffcc66;
   cursor: pointer;
   font-family: 'Fira Code', monospace;
+  color: #ffcc66;
 }
 
 .chat-item:hover,
 .chat-item.active {
   background: #444444;
+  font-weight: bold;
+}
+
+.chat-item.active::before {
+  content: '>';
+  margin-right: 5px;
+  color: #ffcc66;
 }
