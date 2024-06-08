@@ -13,25 +13,35 @@ const App = () => {
   const [currentChatId, setCurrentChatId] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [serverAddress, setServerAddress] = useState('http://127.0.0.1:8080');
-  const [temperature, setTemperature] = useState(1.0);
-  const [repetitionPenalty, setRepetitionPenalty] = useState(1.0);
   const chatWindowRef = useRef(null);
 
   useEffect(() => {
     const savedChats = localStorage.getItem('chats');
     const savedAddress = localStorage.getItem('serverAddress');
-    const savedTemperature = localStorage.getItem('temperature');
-    const savedRepetitionPenalty = localStorage.getItem('repetitionPenalty');
-
+    const savedCurrentChatId = localStorage.getItem('currentChatId');
+    
     if (savedChats) {
       const parsedChats = JSON.parse(savedChats);
       setChats(parsedChats);
-      setCurrentChatId(parsedChats.length > 0 ? 0 : null);
+
+      if (savedCurrentChatId !== null) {
+        const parsedChatId = parseInt(savedCurrentChatId, 10);
+        setCurrentChatId(parsedChatId >= 0 && parsedChatId < parsedChats.length ? parsedChatId : (parsedChats.length > 0 ? 0 : null));
+      } else {
+        setCurrentChatId(parsedChats.length > 0 ? 0 : null);
+      }
     }
-    if (savedAddress) setServerAddress(savedAddress);
-    if (savedTemperature) setTemperature(parseFloat(savedTemperature));
-    if (savedRepetitionPenalty) setRepetitionPenalty(parseFloat(savedRepetitionPenalty));
+    
+    if (savedAddress) {
+      setServerAddress(savedAddress);
+    }
   }, []);
+
+  useEffect(() => {
+    if (currentChatId !== null) {
+      localStorage.setItem('currentChatId', currentChatId);
+    }
+  }, [currentChatId]);
 
   useLayoutEffect(() => {
     if (chatWindowRef.current && currentChatId !== null && chats[currentChatId]) {
@@ -52,7 +62,7 @@ const App = () => {
 
   const getBotResponse = async (message) => {
     if (currentChatId === null || !chats[currentChatId]) return;
-  
+
     const fullChat = [
       ...chats[currentChatId].messages,
       { sender: 'user', text: message }
@@ -60,47 +70,41 @@ const App = () => {
       role: msg.sender === 'user' ? 'user' : 'assistant',
       content: msg.text
     }));
-  
+
     try {
       const response = await axios.post(`${serverAddress}/v1/chat/completions`, {
         messages: fullChat,
-        temperature, // Include the temperature parameter
-        repetition_penalty: repetitionPenalty // Include the repetition penalty parameter
       });
-  
+
       const botMessage = response.data.choices[0].message.content;
-  
+
       setChats(prevChats => {
         const updatedChats = [...prevChats];
         const currentChat = updatedChats[currentChatId];
-  
-        // Check if the last message is already the bot's response to prevent duplication
+
         const lastMessage = currentChat.messages[currentChat.messages.length - 1];
         if (lastMessage && lastMessage.text === botMessage && lastMessage.sender === 'bot') {
-          return prevChats; // No need to add the bot message again
+          return prevChats;
         }
-  
-        // Adding the bot message to the chat
+
         currentChat.messages.push({ sender: 'bot', text: botMessage });
-  
-        // Saving the updated chats to localStorage
+
         localStorage.setItem('chats', JSON.stringify(updatedChats));
-  
+
         return updatedChats;
       });
-  
-      // Ensure scroll to bottom after state update
+
       if (chatWindowRef.current) {
         setTimeout(() => {
           chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
-        }, 0); // Ensure it happens after DOM updates
+        }, 0);
       }
-  
+
     } catch (error) {
       console.error('Error communicating with the API:', error);
     }
   };
-  
+
   const handleSend = async (message) => {
     if (currentChatId !== null && chats[currentChatId]) {
       setChats(prevChats => {
@@ -131,19 +135,13 @@ const App = () => {
     setCurrentChatId(chatId);
   };
 
-  const handleSettingsSave = ({ serverAddress, temperature, repetitionPenalty }) => {
-    setServerAddress(serverAddress);
-    setTemperature(temperature);
-    setRepetitionPenalty(repetitionPenalty);
-  };
-
   return (
     <div className="app">
       <div className="sidebar">
         <button onClick={handleNewChat}>New Chat</button>
         <button onClick={() => setShowSettings(true)}>Settings</button>
         <FaTrash onClick={handleDeleteChat} />
-        <ChatHistory chats={chats} onSelectChat={handleSelectChat} />
+        <ChatHistory chats={chats} onSelectChat={handleSelectChat} currentChatId={currentChatId} />
       </div>
       <div className="main">
         <div className="chat-window" ref={chatWindowRef}>
@@ -162,7 +160,7 @@ const App = () => {
       {showSettings && (
         <Settings
           onClose={() => setShowSettings(false)}
-          onSave={handleSettingsSave} // Update to handle additional settings
+          onSave={(newAddress) => setServerAddress(newAddress)}
         />
       )}
     </div>

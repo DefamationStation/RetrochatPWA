@@ -1,15 +1,18 @@
+/* ChatHistory.css */
+
 .chat-history {
-    margin-top: 10px;
-  }
-  
-  .chat-item {
-    padding: 10px;
-    border-bottom: 1px solid #ffcc66; 
-    cursor: pointer;
-    font-family: 'Courier New', Courier, monospace; 
-  }
-  
-  .chat-item:hover {
-    background: #222222; 
-  }
-  
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-item {
+  padding: 10px;
+  border-bottom: 1px solid #ffcc66;
+  cursor: pointer;
+  font-family: 'Fira Code', monospace;
+}
+
+.chat-item:hover,
+.chat-item.active {
+  background: #444444;
+}
