@@ -6,21 +6,84 @@
 }
 
 .chat-item {
-  padding: 10px;
+  padding: 1px;
   border-bottom: 1px solid #ffcc66;
   cursor: pointer;
   font-family: 'Fira Code', monospace;
   color: #ffcc66;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chat-item:hover,
 .chat-item.active {
   background: #444444;
-  font-weight: bold;
+  font-weight: normal; /* Revert to normal weight for consistency */
 }
 
 .chat-item.active::before {
   content: '>';
   margin-right: 5px;
   color: #ffcc66;
+}
+
+.chat-actions {
+  display: flex;
+  gap: 10px; /* Space between the edit and delete icons */
+}
+
+.action-icon {
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ffcc66; /* Small material border */
+  color: #ffcc66;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.action-icon:hover {
+  background-color: #555555;
+  color: #ffdd88;
+}
+
+.rename-icon {
+  margin-left: 10px;
+}
+
+/* Styling for the rename modal (inline or separate component) */
+.rename-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #3a3a3a;
+  padding: 20px;
+  border: 1px solid #ffcc66;
+  box-shadow: 0 0 10px rgba(255, 204, 102, 0.5);
+  z-index: 1000; /* Ensure it appears above other content */
+}
+
+.rename-modal input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ffcc66;
+  background: #2b2b2b;
+  color: #ffcc66;
+  outline: none;
+}
+
+.rename-modal button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  border: 1px solid #ffcc66;
+  background: #2b2b2b;
+  color: #ffcc66;
+  cursor: pointer;
+  outline: none;
+}
+
+.rename-modal button:hover {
+  background: #444444;
 }

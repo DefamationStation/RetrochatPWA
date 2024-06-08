@@ -1,7 +1,8 @@
 import React from 'react';
-import './ChatHistory.css';
+import { FaEdit, FaTrash } from 'react-icons/fa'; // Import both icons
+import './ChatHistory.css'; // Import the CSS file for styling
 
-const ChatHistory = ({ chats, onSelectChat, currentChatId }) => {
+const ChatHistory = ({ chats, onSelectChat, currentChatId, onRenameChat, onDeleteChat }) => {
   return (
     <div className="chat-history">
       {chats.map((chat, index) => (
@@ -10,7 +11,13 @@ const ChatHistory = ({ chats, onSelectChat, currentChatId }) => {
           className={`chat-item ${chat.id === currentChatId ? 'active' : ''}`} 
           onClick={() => onSelectChat(chat.id)}
         >
-          {chat.id === currentChatId ? '' : ''} Chat {chat.id + 1}
+          <span className="chat-name">
+            {chat.name}
+          </span>
+          <div className="chat-actions">
+            <FaEdit className="action-icon" onClick={(e) => { e.stopPropagation(); onRenameChat(chat.id); }} />
+            <FaTrash className="action-icon" onClick={(e) => { e.stopPropagation(); onDeleteChat(chat.id); }} />
+          </div>
         </div>
       ))}
     </div>

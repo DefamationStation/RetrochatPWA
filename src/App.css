@@ -8,6 +8,45 @@ body {
   color: #ffcc66;
 }
 
+/* Markdown and Code Block Styling */
+.message pre, .message code {
+  background-color: #2d2d2d; /* Dark background for code blocks */
+  color: #ffcc66;
+  border-radius: 5px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.message code {
+  font-family: 'Fira Code', monospace;
+  font-size: 1em;
+}
+
+.message pre {
+  margin: 10px 0;
+}
+
+.markdown a {
+  color: #ffdd88;
+  text-decoration: underline;
+}
+
+.markdown blockquote {
+  border-left: 4px solid #ffcc66;
+  padding-left: 10px;
+  margin: 0;
+  color: #cccccc;
+}
+
+.markdown ul, .markdown ol {
+  padding-left: 15px; /* Ensure list items are properly indented */
+}
+
+.markdown ol {
+  list-style-position: inside; /* Ensure ordered list numbers are inside the boundaries */
+}
+
+/* General App Layout */
 .app {
   display: flex;
   height: 100vh;
