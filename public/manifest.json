@@ -1,6 +1,6 @@
 {
-  "short_name": "ChatApp",
-  "name": "PWA Chat Application",
+  "short_name": "Retrochat",
+  "name": "Retrochat",
   "icons": [
     {
       "src": "favicon.ico",
