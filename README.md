@@ -1,4 +1,17 @@
-# pwa-chat-app
+# RetroChat
 
+## How to Setup and Run the Project
 
-Just a simple React to use local llm's in
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/yourusername/retrochat.git
+   cd retrochat
+
+## Install Dependencies:
+
+npm install
+
+## Run the Application:
+
+npm start
+
