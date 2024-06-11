@@ -1,9 +1,5 @@
 # RetroChat
 
-## Discord link:
-
-https://discord.gg/dZxjYNyNth
-
 ## How to Setup and Run the Project
 
 1. **Clone the Repository**:
